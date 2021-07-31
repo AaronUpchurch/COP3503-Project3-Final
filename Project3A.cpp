@@ -13,7 +13,7 @@
 #include <string>
 
 
-// !!!!!!!!!! Make sure TA knows how to set up SFML initialization //
+// !!!!!!!!!! Make sure TA knows how to set up SFML initialization??? //
 
 //========================= Physics Constants ========================================//
 #define G 0.000000000006674 // Gravitational constant used in force equation 
