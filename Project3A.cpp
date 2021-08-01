@@ -92,6 +92,7 @@ void updateDirectionalModel(RectangleShape& velocityDirectionModel, Particle** p
     if (particles[particleIndexToObserve]->xVel < 0) { // if oppiste signs
         velocityDirectionModel.rotate(180); /// rotate an extra 90 degreess, makes up for atan's positve boundaries
     }
+    velocityDirectionModel.setSize({ 50,5 });
 }
 void alterWindow(Keyboard& k, RenderWindow& window, View& innerView, View& outerView, CircleShape* circles, int& thickness, bool& pause, Mouse& mouse) {
     if (k.isKeyPressed(k.Space)) {
@@ -144,7 +145,6 @@ void alterWindow(Keyboard& k, RenderWindow& window, View& innerView, View& outer
     if (k.isKeyPressed(k.A)) {
         innerView.zoom(1.1);
         thickness = circles[0].getRadius() * 2;
-
         window.setView(innerView);
         changeCircleRadius(1.1, circles);
 
@@ -279,7 +279,7 @@ void initializeParticles(Particle** particles, CircleShape* circles) {
         circles[i].setRadius(10);
         circles[i].setFillColor(Color::White);
         circles[i].setPosition(Rand((windowX - 1)).val + maxX / 2, Rand((windowY - 1)).val + maxY / 2);
-        particles[i] = new Particle(circles[i].getX(),circles[i].getY(),particleMass, 0, 0);
+        particles[i] = new Particle(circles[i].getX(),circles[i].getY(),particleMass, Rand(100).val - 50, Rand(100).val-50);
         particles[i]->xVel = (*particles[i]->y - ((windowY / 2) + maxX / 2)) / 50; // makes circluar pattern //
         particles[i]->yVel = -(*particles[i]->x - ((windowX / 2) + maxY / 2)) / 50;
     }
@@ -343,12 +343,11 @@ void funParticleInitialization(Particle** particles, CircleShape* circles) {
         particles[i]->xVel = (*particles[i]->y - ((windowY / 2) + maxX / 2)) / 5; // makes circluar pattern //
         particles[i]->yVel = -(*particles[i]->x - ((windowX / 2) + maxY / 2)) / 5;
     }
-    circles[0].setRadius(30);
+    circles[0].setRadius(70);
     particles[0]->mass = 5000000000000000 * 1000;
     circles[0].setPosition(windowX / 2 + maxX / 2, windowY / 2 + maxY / 2);
     particles[0]->xVel = 0;
     particles[0]->yVel = 0;
-    particles[0]->moveMe = false;
 }
 void galaxyMergeInitialization(Particle** particles, CircleShape* circles) {
     for (int i = 0; i < numOfParticles / 2; ++i) { // initializes all particles 
@@ -408,9 +407,7 @@ void quadgalaxyMergeInitialization(Particle** particles, CircleShape* circles) {
 //==================================== Circles Functions ===================================================//
 
 void changeCircleRadius(float amount, CircleShape* circles) {
-    if (circles[0].getRadius() < 1) {
-        circles[0].setRadius(1);
-    }
+
     forAllParticles{
         circles[i].setRadius(circles[i].getRadius() * amount);
     }
@@ -461,6 +458,7 @@ void initializeTracker(CircleShape& tracker) {
     tracker.setOutlineThickness(20);
 }
 void initializeVelocityModel(CircleShape& velocityModel, RectangleShape& velocityDirectionModel) {
+
     velocityModel.setRadius(20);
     velocityModel.setPosition({ 800,800 });
     velocityModel.setOutlineColor(Color::White);
@@ -545,7 +543,7 @@ int main()
     int particleIndexToObserve = 1; // index of particle to track
     bool pause = false; // if simulation is paused
     int currentCycle = 0; // current simulations iteration
-    int thickness = 10; // thickness of showRectangles's lines
+    int thickness = 20; // thickness of showRectangles's lines
     double totalTime = 0; // total time since start of simulation
     bool showRectangles = false; // shows algorithms's rectangles
     auto start = std::chrono::system_clock::now(); // starting time
@@ -569,9 +567,6 @@ int main()
 
         drawCirlces(circles, window); // draws all circles onto the window
 
-        updateTexts(totalTimeText, cyclesPerSecondText, iterationCountText, totalTime, currentCycle); // changes texts to display correct number
-
-        updateDirectionalModel(velocityDirectionModel, particles, particleIndexToObserve);
 
         drawExtras(window, innerView, outerView, innerShapes, backgroundShapes, texts); // draws border around inner window
 
@@ -610,9 +605,14 @@ int main()
 
             changeColorBasedOnVelocity(particles, circles, avgXVel, avgXVel); // changes oclor of particles based on average velocoties
 
-            //clickToAddMass(particles, circles, m, window,innerView,true);
+            //clickToAddMass(particles, circles, mouse, window,innerView,true);
 
             clickToAddParticles(particles, circles, mouse, window, innerView, cycleCounter, false); // adds particles to simulation if inner view is clicked
+            // maybe add to it becomes a contant stream
+
+            updateDirectionalModel(velocityDirectionModel, particles, particleIndexToObserve);
+
+            updateTexts(totalTimeText, cyclesPerSecondText, iterationCountText, totalTime, currentCycle); // changes texts to display correct number
         }
 
     }
