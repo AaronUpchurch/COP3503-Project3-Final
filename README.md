@@ -1,4 +1,9 @@
 # COP3503-Project3-Final
+++++++++++++++++++++
+  To Run The Code
+++++++++++++++++++++
+1. Git Clone the executable folder
+2. Run the executable
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	To Run Code From Github On Visual Studio
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
