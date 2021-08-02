@@ -21,7 +21,7 @@
 //============================== Simulation Constants ===============================================//
 
 #define cyclesToDo -1 // number of iterations the program should complete
-#define numOfParticles 1000 // number of particles in the system 
+#define numOfParticles 2000 // number of particles in the system 
 
 
 //==================================== namespaces ===========================================//
@@ -46,7 +46,7 @@ void Transformable::updatePos() {
 
 void initializeWindow(RenderWindow& window, View& innerView, View& outerView);
 void alterWindow(Keyboard& k, RenderWindow& window, View& innerView, View& outerView, CircleShape* circles, Particle** particles, bool& show, bool& clear, float& theta, int& thickness, bool& resetBoo, bool& pause, Mouse& mouse, vector<bool*> inits, int& index);
-void clickToAddMass(Particle** particles, CircleShape* circles, Mouse& m, RenderWindow& window, View& innerView, bool antimatter);
+void clickToAddMass(Particle** particles, CircleShape* circles, Mouse& m, RenderWindow& window, View& innerView, bool antimatter, Keyboard& k);
 void initializeWindowBorder(RectangleShape& windowBorder);
 void initializeParticles(Particle** particles, CircleShape* circles);
 void calcGrav(Particle& A, Particle& B);
@@ -258,21 +258,23 @@ void alterWindow(Keyboard& k, RenderWindow& window, View& innerView, View& outer
 
 
 }
-void clickToAddMass(Particle** particles, CircleShape* circles, Mouse& m, RenderWindow& window, View& innerView, bool antimatter) {
+void clickToAddMass(Particle** particles, CircleShape* circles, Mouse& m, RenderWindow& window, View& innerView, bool antimatter, Keyboard& k) {
 
-    if (m.isButtonPressed(Mouse::Button::Left)) {
-        window.setView(innerView);
-        //circles[0].setPosition(Vector2f(m.getPosition()));
-        *particles[0]->x = window.mapPixelToCoords(Vector2i(m.getPosition())).x;
-        *particles[0]->y = window.mapPixelToCoords(Vector2i(m.getPosition())).y;
+    if (m.isButtonPressed(Mouse::Button::Right)) {
+ 
+            window.setView(innerView);
+                //circles[0].setPosition(Vector2f(m.getPosition()));
+                *particles[0]->x = window.mapPixelToCoords(Vector2i(m.getPosition())).x;
+                *particles[0]->y = window.mapPixelToCoords(Vector2i(m.getPosition())).y;
 
-        particles[0]->mass = particleMass * (double)5000;
-        if (antimatter) {
-            particles[0]->mass *= -1;
-        }
-        circles[0].updatePos();
+                particles[0]->mass = particleMass * (double)5000;
+                if (antimatter) {
+                    particles[0]->mass *= -1;
+                }
+            circles[0].updatePos();
 
-        circles[0].setFillColor(Color::Transparent);
+                circles[0].setFillColor(Color::Transparent);
+        
     }
 }
 void clickToAddParticles(Particle** particles, CircleShape* circles, Mouse& m, RenderWindow& window, View& innerView, int& index, bool still) {
@@ -525,10 +527,10 @@ void initializeText(vector<Text*>& texts, Font& font) {
     texts.at(2)->setPosition({ 10,150 });
     texts.at(3)->setString( "Pause: Space           Pan Camera: Arrow Pad       Increase Particle Size: Z       Increase Theta: P\n"
                             "Predefined Sets: 1-4   Zoom In: S                  Decrease Particle Size: X       Decrease Theta: O\n"
-                            "Show Algorithm: Q      Zoom Out: A                 Increase Particle Mass: W\n"
-                            "Show Path: R           Track New Particle: I       Decrease Particle Mass: E"
+                            "Show Algorithm: Q      Zoom Out: A                 Increase Particle Mass: W       Add Particle: Left Click\n"
+                            "Show Path: R           Track New Particle: I       Decrease Particle Mass: E       Push Particles: Right Click"
                             );
-    texts.at(3)->setPosition({ 40,800 });
+    texts.at(3)->setPosition({ 5,800 });
     texts.at(3)->setCharacterSize(22);
     texts.at(4)->setPosition({ 775,50 });
     texts.at(5)->setPosition({ 10,250 });
@@ -735,10 +737,10 @@ int main()
 
             changeColorBasedOnVelocity(particles, circles, avgXVel, avgXVel); // changes oclor of particles based on average velocoties
 
-            //clickToAddMass(particles, circles, mouse, window,innerView,false);
+            clickToAddMass(particles, circles, mouse, window,innerView,true, k);
 
             clickToAddParticles(particles, circles, mouse, window, innerView, cycleCounter, false); // adds particles to simulation if inner view is clicked
-            // maybe add to it becomes a contant stream
+
 
             updateDirectionalModel(velocityDirectionModel, particles, particleIndexToObserve);
 
