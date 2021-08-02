@@ -2,6 +2,7 @@
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	To Run Code From Github On Visual Studio
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+0. Do Not Use Visual Studio's Git Clone Feature
 1. Create a new folder
 2. In the new folder's command line interface type "git clone https://github.com/AaronUpchurch/COP3503-Project3-Final"
 3. Create a new empty visual studio project
