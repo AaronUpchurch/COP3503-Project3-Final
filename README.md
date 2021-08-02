@@ -11,12 +11,14 @@
 	Rand.h
 5. From the clone folder, copy and paste the following .cpp files into the Source file folder in the solution explorer
 	Project3A.cpp
+*** Copy the files themselves, not the code
 6. Open the new visual studio project's file in file explorer
 7. Go into the inner folder that contains several vcxproj files
 8. Copy and paste all files from the clone folder into this project folder
-9. In visual studio, open the Project3A.cpp file from the solution explorer by double clicking on it
-9. In visual studio click, under the Project tab, click on properties located at the bottom
-10. Under the C/C++ -> General tab, add the following to "Additional Include Directories"
+9. *** Copy the files themselves, not the code
+10. In visual studio, open the Project3A.cpp file from the solution explorer by double clicking on it
+11. In visual studio click, under the Project tab, click on properties located at the bottom
+12. Under the C/C++ -> General tab, add the following to "Additional Include Directories"
 	...pathToProject....SFML-2.5.1-windows-vc15-64-bit\SFML-2.5.1\include
 	ex) C:\Users\aaron\source\repos\COP3530-Project3-Final\COP3530-Project3-Final\SFML-2.5.1-windows-vc15-64-bit\SFML-2.5.1\include
 11. Under the Linker -> General tab add the following to "Additional Library Directoriest
