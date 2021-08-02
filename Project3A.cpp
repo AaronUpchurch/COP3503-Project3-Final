@@ -45,7 +45,7 @@ void Transformable::updatePos() {
 //==================================== Function Declarations ==========================================//
 
 void initializeWindow(RenderWindow& window, View& innerView, View& outerView);
-void alterWindow(Keyboard& k, RenderWindow& window, View& innerView, View& outerView, CircleShape* circles, Particle** particles, bool& show, bool& clear, float& theta, int& thickness, bool& resetBoo, bool& pause, Mouse& mouse, vector<bool*> inits);
+void alterWindow(Keyboard& k, RenderWindow& window, View& innerView, View& outerView, CircleShape* circles, Particle** particles, bool& show, bool& clear, float& theta, int& thickness, bool& resetBoo, bool& pause, Mouse& mouse, vector<bool*> inits, int& index);
 void clickToAddMass(Particle** particles, CircleShape* circles, Mouse& m, RenderWindow& window, View& innerView, bool antimatter);
 void initializeWindowBorder(RectangleShape& windowBorder);
 void initializeParticles(Particle** particles, CircleShape* circles);
@@ -62,7 +62,7 @@ void clampView(RenderWindow& window, View& innerView, CircleShape& circle);
 void clickToAddParticles(Particle** particles, CircleShape* circles, Mouse& m, RenderWindow& window, View& innerView, int& index, bool still);
 void galaxyMergeInitialization(Particle** particles, CircleShape* circles);
 void quadgalaxyMergeInitialization(Particle** particles, CircleShape* circles);
-void updateTexts(Text& totalTimeText, Text& cyclesPerSecondText, Text& iterationCountText,  Text& trackerVelocity, Text& thetaText, float theta, double& totalTime, int& currentCycle, float& xVel, float yVel);
+void updateTexts(vector<Text*> texts, float theta, double& totalTime, int& currentCycle, float& xVel, float yVel, int index);
 void updateTracker(CircleShape& tracker, CircleShape* circles, int& particleIndexToObserve);
 void updateDirectionalModel(RectangleShape& velocityDirectionModel, Particle* particles, int& particleIndexToTrack);
 void initializeText(vector<Text*>& texts, Font& font);
@@ -85,12 +85,14 @@ void initializeWindow(RenderWindow& window, View& innerView, View& outerView) {
     innerView.zoom(40);
     window.setView(innerView);
 }
-void updateTexts(Text& totalTimeText, Text& cyclesPerSecondText, Text& iterationCountText, Text& trackerVelocity, Text& thetaText, float theta,double& totalTime, int& currentCycle, float& xVel, float yVel) {
-    totalTimeText.setString("Total Time: " + to_string(totalTime) + "s");
-    cyclesPerSecondText.setString("Average Iterations Per Second: " + to_string(currentCycle / totalTime));
-    iterationCountText.setString("Total Iterations: " + to_string(currentCycle));
-    trackerVelocity.setString("X Velocity: " + to_string(xVel) + "\n" + "Y Velocity: " + to_string(yVel));
-    thetaText.setString("Theta: " + to_string(theta));
+void updateTexts(vector<Text*> texts,float theta,double& totalTime, int& currentCycle, float& xVel, float yVel, int index) {
+    texts.at(0)->setString("Total Time: " + to_string(totalTime) + "s");
+    texts.at(1)->setString("Average Iterations Per Second: " + to_string(currentCycle / totalTime));
+    texts.at(2)->setString("Total Iterations: " + to_string(currentCycle));
+    texts.at(4)->setString("X Velocity: " + to_string(xVel) + "\n" + "Y Velocity: " + to_string(yVel));
+    texts.at(5)->setString("Theta: " + to_string(theta));
+    texts.at(6)->setString("Particle ID: " + to_string(index));
+
 }
 void updateDirectionalModel(RectangleShape& velocityDirectionModel, Particle** particles, int& particleIndexToObserve) {
     velocityDirectionModel.setRotation(atan(particles[particleIndexToObserve]->yVel / particles[particleIndexToObserve]->xVel) * 180 / 3.14);
@@ -99,7 +101,7 @@ void updateDirectionalModel(RectangleShape& velocityDirectionModel, Particle** p
     }
     velocityDirectionModel.setSize({ 50,5 });
 }
-void alterWindow(Keyboard& k, RenderWindow& window, View& innerView, View& outerView, CircleShape* circles, Particle** particles, bool& show, bool& clear, float& theta, int& thickness, bool& resetBool, bool& pause, Mouse& mouse, vector<bool*> inits) {
+void alterWindow(Keyboard& k, RenderWindow& window, View& innerView, View& outerView, CircleShape* circles, Particle** particles, bool& show, bool& clear, float& theta, int& thickness, bool& resetBool, bool& pause, Mouse& mouse, vector<bool*> inits, int& index) {
     if (k.isKeyPressed(k.Q)) {
         show = !show;
         while (k.isKeyPressed(k.Q)) {
@@ -243,6 +245,12 @@ void alterWindow(Keyboard& k, RenderWindow& window, View& innerView, View& outer
         theta -= .25;
         resetBool = true;
         while (k.isKeyPressed(k.O)) {
+            //wait
+        }
+    }
+    if (k.isKeyPressed(k.I)) {
+        index += 1;
+        while (k.isKeyPressed(k.I)) {
             //wait
         }
     }
@@ -512,13 +520,21 @@ void initializeText(vector<Text*>& texts, Font& font) {
         texts.at(i)->setCharacterSize(24);
         texts.at(i)->setFillColor(Color::White);
     }
-    texts.at(0)->setPosition({ 100,100 });
-    texts.at(1)->setPosition({ 100,200 });
-    texts.at(2)->setPosition({ 100,150 });
-    texts.at(3)->setString(" Pause: Space \n Pan Camera: Arrow Pad \n Zoom In: S \n Zoom Out: A \n Increase Particle Size: Z \n Decrease Particle Size: X");
-    texts.at(3)->setPosition({ 100,800 });
-    texts.at(4)->setPosition({ 400,800 });
-    texts.at(5)->setPosition({ 800,100 });
+    texts.at(0)->setPosition({ 10,50 });
+    texts.at(1)->setPosition({ 10,100 });
+    texts.at(2)->setPosition({ 10,150 });
+    texts.at(3)->setString( "Pause: Space           Pan Camera: Arrow Pad       Increase Particle Size: Z       Increase Theta: P\n"
+                            "Predefined Sets: 1-4   Zoom In: S                  Decrease Particle Size: X       Decrease Theta: O\n"
+                            "Show Algorithm: Q      Zoom Out: A                 Increase Particle Mass: W\n"
+                            "Show Path: R           Track New Particle: I       Decrease Particle Mass: E"
+                            );
+    texts.at(3)->setPosition({ 40,800 });
+    texts.at(3)->setCharacterSize(22);
+    texts.at(4)->setPosition({ 775,50 });
+    texts.at(5)->setPosition({ 10,250 });
+    texts.at(6)->setPosition({ 800,275 });
+    texts.at(7)->setString("Particle Count: " + to_string(numOfParticles));
+    texts.at(7)->setPosition({ 10,200 });
   
 }
 void initializeTracker(CircleShape& tracker) {
@@ -529,7 +545,7 @@ void initializeTracker(CircleShape& tracker) {
 void initializeVelocityModel(CircleShape& velocityModel, RectangleShape& velocityDirectionModel) {
 
     velocityModel.setRadius(20);
-    velocityModel.setPosition({ 800,800 });
+    velocityModel.setPosition({ 850,150 });
     velocityModel.setOutlineColor(Color::White);
     velocityModel.setScale({ 1.3,2 });
     velocityModel.setOutlineThickness(2);
@@ -539,7 +555,7 @@ void initializeVelocityModel(CircleShape& velocityModel, RectangleShape& velocit
     velocityDirectionModel.setFillColor(Color(200, 200, 200));
     velocityDirectionModel.setSize({ 50,5 });
     velocityDirectionModel.setOrigin({ 0,2.5 });
-    velocityDirectionModel.setPosition({ 825,840 });
+    velocityDirectionModel.setPosition({ 875,190 });
 }
 
 //====================================Main Function =========================================================//
@@ -569,6 +585,8 @@ int main()
     Text controlInstructions; // text to display controls instructions
     Text trackerVelocity;
     Text thetaText;
+    Text particleIndexText;
+    Text particleCount;
 
     vector<Text*> texts; // holds all texts
     texts.push_back(&totalTimeText);
@@ -577,6 +595,8 @@ int main()
     texts.push_back(&controlInstructions);
     texts.push_back(&trackerVelocity);
     texts.push_back(&thetaText);
+    texts.push_back(&particleIndexText);
+    texts.push_back(&particleCount);
     initializeText(texts, font);
 
       //=========================== Visual Graphics =============================================//
@@ -650,7 +670,7 @@ int main()
         
         //============================== Constantly Running =============================================//
 
-        alterWindow(k, window, innerView, outerView, circles,particles, showRectangles, clear, theta, thickness,resetBool, pause, mouse, inits); // 
+        alterWindow(k, window, innerView, outerView, circles,particles, showRectangles, clear, theta, thickness,resetBool, pause, mouse, inits,particleIndexToObserve); // 
 
         drawCirlces(circles, window); // draws all circles onto the window
         
@@ -722,7 +742,7 @@ int main()
 
             updateDirectionalModel(velocityDirectionModel, particles, particleIndexToObserve);
 
-            updateTexts(totalTimeText, cyclesPerSecondText, iterationCountText, trackerVelocity, thetaText, theta,totalTime, currentCycle, particles[particleIndexToObserve]->xVel, particles[particleIndexToObserve]->yVel*-1); // changes texts to display correct number
+            updateTexts(texts,theta,totalTime, currentCycle, particles[particleIndexToObserve]->xVel, particles[particleIndexToObserve]->yVel*-1, particleIndexToObserve); // changes texts to display correct number
         }
     }
 
