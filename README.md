@@ -1,47 +1,23 @@
 # COP3503-Project3-Final
++++++++++++++++++++
+For TA Grader
++++++++++++++++++
+The files we created were Rand.h, bhTree.h, particle.h, and Project3A.cpp
+All other particles are not written by us
+
++++++++++++++++++++
+Sources
++++++++++++++++++++
+SFML: https://www.sfml-dev.org/tutorials/2.5/start-vc.php
+Font: https://www.fontsquirrel.com/fonts/Unibody-8
 ++++++++++++++++++++
   To Run The Code
 ++++++++++++++++++++
 1. Git Clone the executable folder
 2. Run the executable
-
-+++++++++++++++++++++++++++++++++++++
-To Run Code From Github On Visual Studio
-++++++++++++++++++++++++++++++++++++++++
-0. Do Not Use Visual Studio's Git Clone Feature
-1. Create a new folder
-2. In the new folder's command line interface type "git clone https://github.com/AaronUpchurch/COP3503-Project3-Final"
-3. Create a new empty visual studio project
-4. From the clone folder, copy and paste the following .h files into the header file folder in the solution explorer
-	bhTree.h
-	Particle.h
-	Rand.h
-5. From the clone folder, copy and paste the following .cpp files into the Source file folder in the solution explorer
-	Project3A.cpp
-*** Copy the files themselves, not the code
-6. Open the new visual studio project's file in file explorer
-7. Go into the inner folder that contains several vcxproj files
-8. Copy and paste all files from the clone folder into this project folder
-9. *** Copy the files themselves, not the code
-10. In visual studio, open the Project3A.cpp file from the solution explorer by double clicking on it
-11. In visual studio click, under the Project tab, click on properties located at the bottom
-12. Under the C/C++ -> General tab, add the following to "Additional Include Directories"
-	...pathToProject....SFML-2.5.1-windows-vc15-64-bit\SFML-2.5.1\include
-	ex) C:\Users\aaron\source\repos\COP3530-Project3-Final\COP3530-Project3-Final\SFML-2.5.1-windows-vc15-64-bit\SFML-2.5.1\include
-11. Under the Linker -> General tab add the following to "Additional Library Directoriest
-	...pathToProject...SFML-2.5.1-windows-vc15-64-bit\SFML-2.5.1\lib
-	ex) C:\Users\aaron\source\repos\COP3530-Project3-Final\COP3530-Project3-Final\SFML-2.5.1-windows-vc15-64-bit\SFML-2.5.1\lib
-12. Under the Linker -> Input tab, add the following to "Additional Dependencies"
-	While in Release Configuration
-		sfml-audio.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib
-	While in Debug Configuration
-		sfml-audio-d.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib
-13. Under the Build Tab, click "Configuration Manager"
-14. Change Active Solution Platform to x64
-15. Run the program
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-					Program Controls
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++
+Program Controls
+++++++++++++++++++++
 Pause: Space
 Zoom In: S
 Zoom Out: A
@@ -50,9 +26,9 @@ Pan RightL Right Arrow
 Pan Up: Up Arrow
 Pan Down: Down Arrow
 Add Particles: Left Click
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-				How Program Works
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++
+How Program Works
+++++++++++++++++
 The entire simulation relies on two arrays
 
 	1. The particle araray "Particles"
