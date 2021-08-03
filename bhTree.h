@@ -271,15 +271,7 @@ public:
 		if (node == nullptr) {
 			return;
 		}
-		/*if (node->se != nullptr || node->sw != nullptr || node->nw != nullptr || node->ne != nullptr) { // if internal //
-			applyGravAll(node->se);
-			applyGravAll(node->sw);
-			applyGravAll(node->ne);
-			applyGravAll(node->nw);
-
-			I changed it to below for faster, but should propbably verify that it works...
-		}
-		*/
+	
 		if (node->se != nullptr) {
 			applyGravAll(node->se);
 		}
