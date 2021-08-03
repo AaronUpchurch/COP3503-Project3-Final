@@ -2,7 +2,7 @@
 For TA Grader:
 
 The files we created were Rand.h, bhTree.h, particle.h, and Project3A.cpp
-All other particles are not written by us
+All other files are not written by us
 
 
 Sources:
