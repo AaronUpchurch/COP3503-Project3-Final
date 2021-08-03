@@ -3,8 +3,7 @@
 #include <math.h>
 #include <iostream>
 using namespace std;
-// a helpful random number generator 
-// dont chang me //
+// A helpful random number generator used for particle initialization
 class Rand {
 public:
 	float val;
