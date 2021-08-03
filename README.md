@@ -1,23 +1,19 @@
 # COP3503-Project3-Final
-+++++++++++++++++++
-For TA Grader
-+++++++++++++++++
+For TA Grader:
 The files we created were Rand.h, bhTree.h, particle.h, and Project3A.cpp
 All other particles are not written by us
 
-+++++++++++++++++++
-Sources
-+++++++++++++++++++
+
+Sources:
 SFML: https://www.sfml-dev.org/tutorials/2.5/start-vc.php
 Font: https://www.fontsquirrel.com/fonts/Unibody-8
-++++++++++++++++++++
-  To Run The Code
-++++++++++++++++++++
+
+To Run The Code:
 1. Git Clone the executable folder
 2. Run the executable
-+++++++++++++++++++++
-Program Controls
-++++++++++++++++++++
+
+
+Program Controls:
 Pause: Space
 Zoom In: S
 Zoom Out: A
@@ -26,9 +22,8 @@ Pan RightL Right Arrow
 Pan Up: Up Arrow
 Pan Down: Down Arrow
 Add Particles: Left Click
-+++++++++++++++++
-How Program Works
-++++++++++++++++
+
+How Program Works:
 The entire simulation relies on two arrays
 
 	1. The particle araray "Particles"
