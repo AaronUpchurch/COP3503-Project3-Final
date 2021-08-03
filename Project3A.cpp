@@ -21,8 +21,7 @@
 //============================== Simulation Constants ===============================================//
 
 #define cyclesToDo -1 // number of iterations the program should complete
-#define numOfParticles 2000 // number of particles in the system 
-
+#define numOfParticles 10000 // number of particles in the system 
 
 //==================================== namespaces ===========================================//
 
@@ -73,7 +72,7 @@ void incWeight(Particle** particles, float amount);
 
 //=================================== Window/View Functions ==============================================//
 
-void initializeWindow(RenderWindow& window, View& innerView, View& outerView) {
+void initializeWindow(RenderWindow& window, View& innerView, View& outerView) { // sets up windows and views
     window.setSize({ 2000,1300 });
     window.setView(innerView);
     innerView.setCenter(maxX / 2 + windowX / 2, maxY / 2 + windowY / 2);
@@ -85,7 +84,7 @@ void initializeWindow(RenderWindow& window, View& innerView, View& outerView) {
     innerView.zoom(40);
     window.setView(innerView);
 }
-void updateTexts(vector<Text*> texts,float theta,double& totalTime, int& currentCycle, float& xVel, float yVel, int index) {
+void updateTexts(vector<Text*> texts,float theta,double& totalTime, int& currentCycle, float& xVel, float yVel, int index) { // updates texts based on runtime values
     texts.at(0)->setString("Total Time: " + to_string(totalTime) + "s");
     texts.at(1)->setString("Average Iterations Per Second: " + to_string(currentCycle / totalTime));
     texts.at(2)->setString("Total Iterations: " + to_string(currentCycle));
@@ -94,14 +93,14 @@ void updateTexts(vector<Text*> texts,float theta,double& totalTime, int& current
     texts.at(6)->setString("Particle ID: " + to_string(index));
 
 }
-void updateDirectionalModel(RectangleShape& velocityDirectionModel, Particle** particles, int& particleIndexToObserve) {
+void updateDirectionalModel(RectangleShape& velocityDirectionModel, Particle** particles, int& particleIndexToObserve) { // updates velocity display
     velocityDirectionModel.setRotation(atan(particles[particleIndexToObserve]->yVel / particles[particleIndexToObserve]->xVel) * 180 / 3.14);
     if (particles[particleIndexToObserve]->xVel < 0) { // if oppiste signs
         velocityDirectionModel.rotate(180); /// rotate an extra 90 degreess, makes up for atan's positve boundaries
     }
     velocityDirectionModel.setSize({ 50,5 });
 }
-void alterWindow(Keyboard& k, RenderWindow& window, View& innerView, View& outerView, CircleShape* circles, Particle** particles, bool& show, bool& clear, float& theta, int& thickness, bool& resetBool, bool& pause, Mouse& mouse, vector<bool*> inits, int& index) {
+void alterWindow(Keyboard& k, RenderWindow& window, View& innerView, View& outerView, CircleShape* circles, Particle** particles, bool& show, bool& clear, float& theta, int& thickness, bool& resetBool, bool& pause, Mouse& mouse, vector<bool*> inits, int& index) { // reads and applies user input
     if (k.isKeyPressed(k.Q)) {
         show = !show;
         while (k.isKeyPressed(k.Q)) {
@@ -258,7 +257,7 @@ void alterWindow(Keyboard& k, RenderWindow& window, View& innerView, View& outer
 
 
 }
-void clickToAddMass(Particle** particles, CircleShape* circles, Mouse& m, RenderWindow& window, View& innerView, bool antimatter, Keyboard& k) {
+void clickToAddMass(Particle** particles, CircleShape* circles, Mouse& m, RenderWindow& window, View& innerView, bool antimatter, Keyboard& k) { // adds weight to particles if program is clicked
 
     if (m.isButtonPressed(Mouse::Button::Right)) {
  
@@ -277,7 +276,7 @@ void clickToAddMass(Particle** particles, CircleShape* circles, Mouse& m, Render
         
     }
 }
-void clickToAddParticles(Particle** particles, CircleShape* circles, Mouse& m, RenderWindow& window, View& innerView, int& index, bool still) {
+void clickToAddParticles(Particle** particles, CircleShape* circles, Mouse& m, RenderWindow& window, View& innerView, int& index, bool still) { // adds particles if program is clicked
 
     int times = 10;
     if (index > numOfParticles - times) {
@@ -307,7 +306,7 @@ void initializeWindowBorder(RectangleShape& windowBorder) {
     windowBorder.setPosition({ 250.f,250.f });
     windowBorder.setSize({ 500,500 });
 }
-void drawExtras(RenderWindow& window, View& innerView, View& outerView, vector<Shape*> innerShapes, vector<Shape*> backgroundShapes, vector<Text*> texts) {
+void drawExtras(RenderWindow& window, View& innerView, View& outerView, vector<Shape*> innerShapes, vector<Shape*> backgroundShapes, vector<Text*> texts) { // draws backround shapes
     window.setView(innerView); // draws outline around the particle window
     for (int i = 0; i < innerShapes.size(); ++i) {
         window.draw(*innerShapes.at(i));
@@ -322,11 +321,11 @@ void drawExtras(RenderWindow& window, View& innerView, View& outerView, vector<S
     window.setView(innerView);
 
 }
-void clampView(RenderWindow& window, View& innerView, CircleShape& circle) {
+void clampView(RenderWindow& window, View& innerView, CircleShape& circle) { // clamps view onto a single particle
     innerView.move(circle.getPosition().x - innerView.getCenter().x + circle.getRadius(), circle.getPosition().y - innerView.getCenter().y - circle.getRadius());
     window.setView(innerView);
 }
-void updateTracker(CircleShape& tracker, CircleShape* circles, int& particleIndexToObserve) {
+void updateTracker(CircleShape& tracker, CircleShape* circles, int& particleIndexToObserve) { // updates position of tracker circle
 
     tracker.setPosition(circles[particleIndexToObserve].getPosition());
     tracker.setRadius(circles[particleIndexToObserve].getRadius() * 10);
@@ -335,17 +334,18 @@ void updateTracker(CircleShape& tracker, CircleShape* circles, int& particleInde
 
 //================================= Particle Functions ===================================================//
 
-void initializeParticles(Particle** particles, CircleShape* circles) {
+void initializeParticles(Particle** particles, CircleShape* circles) { // initializes values of all particles
     forAllParticles{ // initializes all particles 
         circles[i].setRadius(10);
         circles[i].setFillColor(Color::White);
-        circles[i].setPosition(Rand((windowX - 1)).val + maxX / 2, Rand((windowY - 1)).val + maxY / 2);
+        int spread = 3;
+        circles[i].setPosition((Rand((windowX*spread - 1)).val + maxX / 2)-(spread*1500), (Rand((windowY*spread - 1)).val + maxY / 2-(spread*1500)));
         particles[i] = new Particle(circles[i].getX(),circles[i].getY(),particleMass, Rand(100).val - 50, Rand(100).val-50);
         particles[i]->xVel = (*particles[i]->y - ((windowY / 2) + maxX / 2)) / 50; // makes circluar pattern //
         particles[i]->yVel = -(*particles[i]->x - ((windowX / 2) + maxY / 2)) / 50;
     }
 }
-void calcGrav(Particle& A, Particle& B) {
+void calcGrav(Particle& A, Particle& B) { // calculates gravity force for pair of particles
     float r = sqrt((A.x - B.x) * (A.x - A.x) + (A.y - B.y) * (A.y - B.y));
     if (r == 0) {
         return;
@@ -363,7 +363,7 @@ void calcGrav(Particle& A, Particle& B) {
     yForce *= -1;
     B.applyGravity(xForce, yForce);
 }
-void BarnesHut(bhTree* tree, Particle** particles, CircleShape* circles) {
+void BarnesHut(bhTree* tree, Particle** particles, CircleShape* circles) { // performs barnes hut algorithm
     forAllParticles{
             if (particles[i]->active) { // inserts particles that are not out of bounds 
                 tree->root = tree->insert(tree->root, particles[i]); // make sure rand position cant be at max window, if so, infinite recursion
@@ -380,14 +380,14 @@ void BarnesHut(bhTree* tree, Particle** particles, CircleShape* circles) {
     }
     tree->applyGravAll(tree->root); // applies gravity to all particles 
 }
-void deactivateOOB(Particle* particles[]) {
+void deactivateOOB(Particle* particles[]) { // deacitvates out of bounds particles
     for (int i = 0; i < numOfParticles; ++i) {
         if (particles[i]->x < 0 || particles[i]->y < 0 || *particles[i]->x > maxX || *particles[i]->y > maxY) {
             particles[i]->active = false;
         }
     }
 }
-void getAvgVel(Particle** particles, float& avgXVel, float& avgYVel) {
+void getAvgVel(Particle** particles, float& avgXVel, float& avgYVel) { // gets average velocity of all particles
     forAllParticles{
         avgXVel += abs(particles[i]->xVel);
         avgYVel += abs(particles[i]->yVel);
@@ -395,7 +395,7 @@ void getAvgVel(Particle** particles, float& avgXVel, float& avgYVel) {
     avgXVel /= numOfParticles;
     avgYVel /= numOfParticles;
 }
-void funParticleInitialization(Particle** particles, CircleShape* circles) {
+void funParticleInitialization(Particle** particles, CircleShape* circles) { // fun initializer for particles
     forAllParticles{ // initializes all particles
         circles[i].setRadius(10);
         circles[i].setFillColor(Color::White);
@@ -410,7 +410,7 @@ void funParticleInitialization(Particle** particles, CircleShape* circles) {
     particles[0]->xVel = 0;
     particles[0]->yVel = 0;
 }
-void galaxyMergeInitialization(Particle** particles, CircleShape* circles) {
+void galaxyMergeInitialization(Particle** particles, CircleShape* circles) { // initializes particles to form two galaixes
     for (int i = 0; i < numOfParticles / 2; ++i) { // initializes all particles 
         circles[i].setRadius(10);
         circles[i].setFillColor(Color::White);
@@ -429,7 +429,7 @@ void galaxyMergeInitialization(Particle** particles, CircleShape* circles) {
         particles[i]->yVel = -(*particles[i]->x - ((windowX / 2) + maxY / 2 + distanceSeperate)) / 50;
     }
 }
-void quadgalaxyMergeInitialization(Particle** particles, CircleShape* circles) {
+void quadgalaxyMergeInitialization(Particle** particles, CircleShape* circles) { // initialzes particles to form 4 galaxies
     int distanceSeperate = maxX / 50;
     for (int i = 0; i < numOfParticles / 4; ++i) { // initializes all particles 
         circles[i].setRadius(10);
@@ -464,7 +464,7 @@ void quadgalaxyMergeInitialization(Particle** particles, CircleShape* circles) {
         particles[i]->yVel = -(*particles[i]->x - ((windowX / 2) + maxY / 2 + distanceSeperate)) / 50;
     }
 }
-void randomeInitializeParticles(Particle** particles, CircleShape* circles) {
+void randomeInitializeParticles(Particle** particles, CircleShape* circles) { // randomly assigns values to particles
     forAllParticles{ // initializes all particles 
         circles[i].setRadius(10);
         circles[i].setFillColor(Color::White);
@@ -472,7 +472,7 @@ void randomeInitializeParticles(Particle** particles, CircleShape* circles) {
         particles[i] = new Particle(circles[i].getX(),circles[i].getY(),particleMass, Rand(100).val - 50, Rand(100).val - 50);
     }
 };
-void incWeight(Particle** particles, float amount) {
+void incWeight(Particle** particles, float amount) { // changes weight of all particles
     forAllParticles{
         particles[i]->mass *= amount;
     }
@@ -482,18 +482,18 @@ void incWeight(Particle** particles, float amount) {
 
 //==================================== Circles Functions ===================================================//
 
-void changeCircleRadius(float amount, CircleShape* circles) {
+void changeCircleRadius(float amount, CircleShape* circles) { // changes radius of all particles 
 
     forAllParticles{
         circles[i].setRadius(circles[i].getRadius() * amount);
     }
 }
-void drawCirlces(CircleShape* circles, RenderWindow& window) {
+void drawCirlces(CircleShape* circles, RenderWindow& window) { // draws all particles
     forAllParticles{
         window.draw(circles[i]);
     }
 }
-void changeColorBasedOnVelocity(Particle** particles, CircleShape* circles, float& avgXVel, float& avgYVel) {
+void changeColorBasedOnVelocity(Particle** particles, CircleShape* circles, float& avgXVel, float& avgYVel) { // changes color of particle based on velocity
     forAllParticles{ // changes color of particles 
         float totv = abs(particles[i]->xVel) + abs(particles[i]->yVel);
         if (totv < .3 * (avgXVel + avgYVel)) {
@@ -516,7 +516,7 @@ void changeColorBasedOnVelocity(Particle** particles, CircleShape* circles, floa
 
 //==================================== Misc Functions ======================================================//
 
-void initializeText(vector<Text*>& texts, Font& font) {
+void initializeText(vector<Text*>& texts, Font& font) { // initializes all text
     for (int i = 0; i < texts.size(); ++i) {
         texts.at(i)->setFont(font);
         texts.at(i)->setCharacterSize(24);
@@ -539,12 +539,12 @@ void initializeText(vector<Text*>& texts, Font& font) {
     texts.at(7)->setPosition({ 10,200 });
   
 }
-void initializeTracker(CircleShape& tracker) {
+void initializeTracker(CircleShape& tracker) { // initialies tracker circle
     tracker.setFillColor(Color::Transparent);
     tracker.setOutlineColor(Color::White);
     tracker.setOutlineThickness(20);
 }
-void initializeVelocityModel(CircleShape& velocityModel, RectangleShape& velocityDirectionModel) {
+void initializeVelocityModel(CircleShape& velocityModel, RectangleShape& velocityDirectionModel) { // initializes velocity model
 
     velocityModel.setRadius(20);
     velocityModel.setPosition({ 850,150 });
@@ -601,7 +601,7 @@ int main()
     texts.push_back(&particleCount);
     initializeText(texts, font);
 
-      //=========================== Visual Graphics =============================================//
+    //=========================== Visual Graphics =============================================//
 
     RectangleShape windowBorder; // border around inner view
     initializeWindowBorder(windowBorder);
@@ -626,10 +626,7 @@ int main()
     CircleShape* circles = new CircleShape[numOfParticles]; // circles used to print to window 
     Particle* particles[numOfParticles]; // stores x,y,xVel,yVel,mass 
 
-    //funParticleInitialization(particles, circles); // any one of these initializes all the particles
     initializeParticles(particles, circles);
-    
-    
     
     //============================== Variables ==========================================//
 
@@ -642,15 +639,15 @@ int main()
     int thickness = 20; // thickness of showRectangles's lines
     double totalTime = 0; // total time since start of simulation
     auto start = std::chrono::system_clock::now(); // starting time
-    bool resetBool = false;
-    bool showRectangles = false;
-    bool initOne = true;
-    bool initTwo = false;
-    bool initThree = false;
-    bool initFour = false;
-    bool clear = true;
-    float theta = 1;
-    vector<bool*> inits;
+    bool resetBool = false; // boolean to reset simulation
+    bool showRectangles = false; // boolean to show rectangles
+    bool initOne = true; // boolean to initialze first set
+    bool initTwo = false;// boolean to initialze second set
+    bool initThree = false;// boolean to initialze third set
+    bool initFour = false;// boolean to initialze fourth set
+    bool clear = true; // boolean to clear all particles
+    float theta = 1; // measure of accuracy of the barnes hut tree
+    vector<bool*> inits; // holds all initiailzations booleans
     inits.push_back(&initOne);
     inits.push_back(&initTwo);
     inits.push_back(&initThree);
@@ -672,12 +669,12 @@ int main()
         
         //============================== Constantly Running =============================================//
 
-        alterWindow(k, window, innerView, outerView, circles,particles, showRectangles, clear, theta, thickness,resetBool, pause, mouse, inits,particleIndexToObserve); // 
+        alterWindow(k, window, innerView, outerView, circles,particles, showRectangles, clear, theta, thickness,resetBool, pause, mouse, inits,particleIndexToObserve); // applies user input
 
         drawCirlces(circles, window); // draws all circles onto the window
         
 
-        if (resetBool) {
+        if (resetBool) { // picks which initializer set to user if simulation is reset
             if (initOne) {
                 initializeParticles(particles, circles);
             }
@@ -696,13 +693,12 @@ int main()
         }
         drawExtras(window, innerView, outerView, innerShapes, backgroundShapes, texts); // draws border around inner window
 
-        //clampView(window,innerView, circles[particleIndexToObserve]);
         window.display();
         if (clear) {
             window.clear();
         }
 
-        std::chrono::duration<double> diff = chrono::system_clock::now() - start;
+        std::chrono::duration<double> diff = chrono::system_clock::now() - start; // clock to measure each iteration
         start = chrono::system_clock::now();
 
         if (!pause) { // Pauses time if paused
@@ -710,7 +706,7 @@ int main()
             ++currentCycle;
         }
 
-        if (currentCycle == cyclesToDo) {
+        if (currentCycle == cyclesToDo) { // ends program if at certain iteration
             return 0;
         }
 
@@ -724,25 +720,21 @@ int main()
 
             deactivateOOB(particles); // deactivates out of bounds particles
 
-            getAvgVel(particles, avgXVel, avgYVel);
-
-
-
+            getAvgVel(particles, avgXVel, avgYVel); // gets average velocity of all particles
 
             if (showRectangles) {
                 tree->showRectangles(window, thickness); // shows Barnes-Hill algortithm calculations
             }
 
-            updateTracker(tracker, circles, particleIndexToObserve);
+            updateTracker(tracker, circles, particleIndexToObserve); // updates tracker position
 
             changeColorBasedOnVelocity(particles, circles, avgXVel, avgXVel); // changes oclor of particles based on average velocoties
 
-            clickToAddMass(particles, circles, mouse, window,innerView,true, k);
+            clickToAddMass(particles, circles, mouse, window,innerView,true, k); // if program is clicked, adds a mass at cursor
 
             clickToAddParticles(particles, circles, mouse, window, innerView, cycleCounter, false); // adds particles to simulation if inner view is clicked
 
-
-            updateDirectionalModel(velocityDirectionModel, particles, particleIndexToObserve);
+            updateDirectionalModel(velocityDirectionModel, particles, particleIndexToObserve); // updates directional mode;
 
             updateTexts(texts,theta,totalTime, currentCycle, particles[particleIndexToObserve]->xVel, particles[particleIndexToObserve]->yVel*-1, particleIndexToObserve); // changes texts to display correct number
         }
